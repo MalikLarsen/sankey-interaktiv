@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="da">
 <head>
   <meta charset="UTF-8">
-  <title>Vælgerbevægelser – Sankey Diagram</title>
+  <title>Vælgerbevægelser</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
   <style>
@@ -16,6 +15,19 @@
     }
     h1 {
       color: #003366;
+    }
+    .infobox {
+      background: #e8f1fb;
+      border-left: 5px solid #003366;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      color: #003366;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+      border-radius: 6px;
     }
     svg {
       background: #ffffff;
@@ -39,17 +51,22 @@
     }
     footer {
       margin-top: 40px;
-      color: #666;
+      color: #003366;
       font-size: 14px;
     }
   </style>
 </head>
 <body>
   <h1>Vælgerbevægelser fra 2022 til 2025</h1>
+
+  <div class="infobox">
+    Diagrammet er baseret på reelle ændringer i partiernes opbakning ifølge Voxmeter (uge 9, 2025), kombineret med en politologisk vurdering af, hvor vælgere sandsynligvis har bevæget sig hen. Fx er en stor del af SF’s fremgang sandsynligvis kommet fra Socialdemokratiet, og Liberal Alliance har fået vælgere fra både Moderaterne og Venstre.
+  </div>
+
   <div class="tooltip" id="tooltip"></div>
   <svg width="960" height="500"></svg>
 
-  <footer style="margin-top: 40px; color: #003366; font-size: 14px;">
+  <footer>
     &copy; 2025 Politisk Analyse. Udarbejdet til samfundsfagsprojekt - Malik Larsen.
   </footer>
 
@@ -73,11 +90,11 @@ const graph = {
     { name: "Dansk Folkeparti", beskrivelse: "Taber opbakning til DD" }
   ],
   links: [
-    { source: "Socialdemokratiet", target: "SF", value: 5 },
-    { source: "Moderaterne", target: "Liberal Alliance", value: 3 },
-    { source: "Moderaterne", target: "Venstre", value: 2 },
-    { source: "Venstre", target: "Liberal Alliance", value: 2 },
-    { source: "Dansk Folkeparti", target: "Danmarksdemokraterne", value: 4 }
+    { source: "Socialdemokratiet", target: "SF", value: 5, forklaring: "Mange socialdemokratiske vælgere har skiftet til SF pga. klima og velfærdspolitik." },
+    { source: "Moderaterne", target: "Liberal Alliance", value: 3, forklaring: "Moderaternes midterkurs appellerer ikke længere til liberale vælgere, som vælger LA." },
+    { source: "Moderaterne", target: "Venstre", value: 2, forklaring: "Venstre fremstår som et mere stabilt valg for tidligere midtervælgere." },
+    { source: "Venstre", target: "Liberal Alliance", value: 2, forklaring: "Unge vælgere søger mod Liberal Alliance på grund af skat og frihed." },
+    { source: "Dansk Folkeparti", target: "Danmarksdemokraterne", value: 4, forklaring: "Danmarksdemokraterne har overtaget DF's rolle i provinsområder og kulturdebatten." }
   ]
 };
 
@@ -102,7 +119,7 @@ svg.append("g")
   .on("mouseover", (event, d) => {
     tooltip.html(`<strong>${d.source.name} → ${d.target.name}</strong><br/>
                   Antal vælgere: ${d.value} %<br/>
-                  Flytningen skyldes fx klima, velfærd, lav skat eller kulturelle værdier.`)
+                  ${d.forklaring}`)
            .style("left", (event.pageX + 12) + "px")
            .style("top", (event.pageY - 20) + "px")
            .style("opacity", 1);
